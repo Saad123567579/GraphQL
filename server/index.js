@@ -50,6 +50,7 @@ async function startServer() {
     app.use(cors());
     await server.start();
     app.use("/graphql", expressMiddleware(server));
+    app.get("/",(req,res)=>{  return res.json("The server is up and running") })
     app.listen(8000, () => { console.log("Server Staretd At 8000") })
 }
 
