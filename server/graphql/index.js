@@ -1,6 +1,6 @@
 import { ApolloServer } from "@apollo/server";
-// import {User} from "./user/index.js";
-import { User } from "./user";
+import user from "./user/user.js";
+
 async function createServer() {
 
     const server = new ApolloServer({
