@@ -1,10 +1,11 @@
 import { ApolloServer } from "@apollo/server";
-import user from "./user/user.js";
 
 async function createServer() {
 
     const server = new ApolloServer({
         typeDefs: `
+
+        
          type User{
             id:String!
             name:String!
@@ -22,6 +23,15 @@ async function createServer() {
             getTodos:[Todo]
             getTodosById(id:String):Todo
          }
+
+         type Mutation {
+            createUser(
+                firstName: String
+                lastName: String
+                email: String
+                password: String
+            ): Boolean
+            }
          
     
          `,
@@ -41,10 +51,26 @@ async function createServer() {
                     let data = await axios.get(`https://jsonplaceholder.typicode.com/todos/${id}`);
                     return data.data;
                 }
+            },
+            Mutation :{
+                createUser: async (parent, { firstName, lastName, email, password }) => {
+                    const client = new PrismaClient({});
+            
+                    const res = await client.user.create({
+                        data: {
+                            firstName,
+                            lastName,
+                            email,
+                            password,
+                            salt: "randomsalt"
+                        }
+                    })
+                    if (res) {
+                        return true;
+                    }
+                    return false;
+                }
             }
-            // Mutation: {
-                
-            // }
         }
     });
     await server.start()
